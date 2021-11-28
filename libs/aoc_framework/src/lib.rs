@@ -1,7 +1,25 @@
 use std::env;
+use std::fmt;
 use reqwest::{header};
 use reqwest::blocking::{Client, ClientBuilder};
 use scraper::{Html, Selector};
+
+
+#[repr(u8)]
+#[derive(Clone, Copy)]
+pub enum Level {
+    One,
+    Two
+}
+
+impl fmt::Display for Level {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            Level::One => write!(f, "1"),
+            Level::Two => write!(f, "2"),
+        }
+    }
+}
 
 #[derive(Clone)]
 pub struct AoC {
@@ -48,13 +66,32 @@ impl AoC {
             .and_then(|res| res.text().ok())
     }
 
-    pub fn send_answer(&self, level: u8, answer: String) -> Option<String> {
+    pub fn send_answer(&self, level: Level, answer: String) -> Option<String> {
         let params = [("level", format!("{}", level)), ("answer", answer)];
         self.client.post(format!("https://adventofcode.com/{}/day/{}/answer", self.year, self.day))
             .form(&params)
             .send()
             .ok()
             .and_then(|res| res.text().ok())
+    }
+
+    pub fn resolve_task<F>(&self, level: Level, handling: F) -> Option<()>
+        where F: FnOnce(Vec<String>) -> Option<String>  {
+        self.get_input_data()
+            .map(|body| {
+                let lines = body.split("\n");
+                lines.collect::<Vec<&str>>()
+                    .iter()
+                    .map(|line| line.to_string())
+                    .filter(|line| !line.is_empty())
+                    .collect::<Vec<String>>()
+            })
+            .and_then(handling)
+            .and_then(|result|
+                self.send_answer(level, result)
+                    .and_then(|res| extract_answer_text(res))
+                    .map(|text| println!("{}", text))
+            )
     }
 }
 
@@ -66,5 +103,5 @@ pub fn extract_answer_text(html: String) -> Option<String> {
             document.select(&selector).next()
         })
         .map(|article| article.text().map(|s| s.to_string()).collect::<Vec<_>>())
-        .and_then(|v| v.first().cloned())
+        .map(|v| v.join("\n"))
 }
