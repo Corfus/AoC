@@ -1,4 +1,6 @@
-# README
+# Readme
+
+[https://adventofcode.com/](https://adventofcode.com/)
 
 ## Environment Variables
- * AOC_SESSION
+ * AOC_SESSION: Advent of Code Session
