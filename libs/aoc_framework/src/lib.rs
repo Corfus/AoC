@@ -59,11 +59,20 @@ impl AoC {
             })
     }
 
-    pub fn get_input_data(&self) -> Option<String> {
+    pub fn get_input_data(&self) -> Option<Vec<String>> {
         self.client.get(format!("https://adventofcode.com/{}/day/{}/input", self.year, self.day))
             .send()
             .ok()
             .and_then(|res| res.text().ok())
+            .map(|body| {
+                body
+                    .split("\n")
+                    .collect::<Vec<&str>>()
+                    .iter()
+                    .map(|line| line.to_string())
+                    .filter(|line| !line.is_empty())
+                    .collect::<Vec<String>>()
+            })
     }
 
     pub fn send_answer(&self, level: Level, answer: String) -> Option<String> {
@@ -78,14 +87,6 @@ impl AoC {
     pub fn resolve_task<F>(&self, level: Level, handling: F) -> Option<()>
         where F: FnOnce(Vec<String>) -> Option<String>  {
         self.get_input_data()
-            .map(|body| {
-                let lines = body.split("\n");
-                lines.collect::<Vec<&str>>()
-                    .iter()
-                    .map(|line| line.to_string())
-                    .filter(|line| !line.is_empty())
-                    .collect::<Vec<String>>()
-            })
             .and_then(handling)
             .and_then(|result|
                 self.send_answer(level, result)
@@ -103,5 +104,10 @@ pub fn extract_answer_text(html: String) -> Option<String> {
             document.select(&selector).next()
         })
         .map(|article| article.text().map(|s| s.to_string()).collect::<Vec<_>>())
-        .map(|v| v.join("\n"))
+        .and_then(|v| {
+            let text = v.join("");
+            text.find("[Return to Day ").map(|index| {
+                text[..index].to_string()
+            })
+        })
 }
