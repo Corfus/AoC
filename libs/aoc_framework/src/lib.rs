@@ -105,8 +105,8 @@ pub fn extract_answer_text(html: String) -> Option<String> {
         })
         .map(|article| article.text().map(|s| s.to_string()).collect::<Vec<_>>())
         .and_then(|v| {
-            let text = v.join("");
-            text.find("[Return to Day ").map(|index| {
+            let text = v.join(" ");
+            text.find("[Return ").map(|index| {
                 text[..index].to_string()
             })
         })

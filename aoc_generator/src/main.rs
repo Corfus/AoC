@@ -3,7 +3,7 @@ use std::fs;
 use std::fs::Metadata;
 use std::path::Path;
 use tera::{Context, Tera};
-use walkdir::{DirEntry, WalkDir};
+use walkdir::{WalkDir};
 
 static TEMPLATE_PATH: &'static str = "templates";
 
@@ -42,7 +42,7 @@ fn main() {
     extract_date()
         .and_then(|(year, day)| {
             create_project_folder(year, day)
-                .and_then(|path| {
+                .and_then(|_| {
                     Tera::new(&format!("{}/**/*", TEMPLATE_PATH))
                         .ok()
                         .and_then(|t| {
