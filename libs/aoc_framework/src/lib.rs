@@ -1,9 +1,10 @@
 use std::env;
 use std::fmt;
+use std::str::FromStr;
 use reqwest::{header};
 use reqwest::blocking::{Client, ClientBuilder};
 use scraper::{Html, Selector};
-
+use regex::{Captures};
 
 #[repr(u8)]
 #[derive(Clone, Copy)]
@@ -104,10 +105,12 @@ pub fn extract_answer_text(html: String) -> Option<String> {
             document.select(&selector).next()
         })
         .map(|article| article.text().map(|s| s.to_string()).collect::<Vec<_>>())
-        .and_then(|v| {
-            let text = v.join(" ");
-            text.find("[Return ").map(|index| {
-                text[..index].to_string()
-            })
+        .map(|v| {
+            v.join(" ")
         })
+}
+
+pub fn parse_capture<T: FromStr>(capture: &Captures, index: usize) -> Option<T> {
+    capture.get(index)
+        .and_then(|m| m.as_str().parse::<T>().ok())
 }

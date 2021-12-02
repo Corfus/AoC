@@ -23,6 +23,7 @@ dependencies = [
 name = "aoc_framework"
 version = "0.1.0"
 dependencies = [
+ "regex",
  "reqwest",
  "scraper",
 ]

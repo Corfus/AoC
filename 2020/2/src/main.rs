@@ -1,13 +1,7 @@
-use std::str::FromStr;
-use aoc_framework::{AoC, Level};
-use regex::{Captures, Regex};
+use aoc_framework::{AoC, Level, parse_capture};
+use regex::{Regex};
 
 type PreparedInput = (usize, usize, String, String);
-
-fn match_to_type<T: FromStr>(capture: &Captures, index: usize) -> Option<T> {
-    capture.get(index)
-        .and_then(|m| m.as_str().parse::<T>().ok())
-}
 
 fn prepare_data(input: Vec<String>) -> Option<Vec<PreparedInput>> {
     input
@@ -20,10 +14,10 @@ fn prepare_data(input: Vec<String>) -> Option<Vec<PreparedInput>> {
                     re
                         .captures(&s)
                         .and_then(|cap| {
-                            match_to_type::<usize>(&cap, 1)
-                                .and_then(|first| match_to_type::<usize>(&cap, 2)
-                                    .and_then(|second| match_to_type::<String>(&cap, 3)
-                                        .and_then(|forth| match_to_type::<String>(&cap, 4)
+                            parse_capture::<usize>(&cap, 1)
+                                .and_then(|first| parse_capture::<usize>(&cap, 2)
+                                    .and_then(|second| parse_capture::<String>(&cap, 3)
+                                        .and_then(|forth| parse_capture::<String>(&cap, 4)
                                             .map(|fifth| (first, second, forth, fifth)
                                             ))))
                         })
