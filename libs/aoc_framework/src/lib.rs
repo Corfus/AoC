@@ -114,3 +114,9 @@ pub fn parse_capture<T: FromStr>(capture: &Captures, index: usize) -> Option<T> 
     capture.get(index)
         .and_then(|m| m.as_str().parse::<T>().ok())
 }
+
+pub fn transpose<T: Clone>(v: &Vec<Vec<T>>) -> Vec<Vec<T>> {
+    (0..v[0].len())
+        .map(|i| v.iter().map(|inner| inner[i].clone()).collect::<Vec<T>>())
+        .collect()
+}
