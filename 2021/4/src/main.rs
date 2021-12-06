@@ -1,4 +1,4 @@
-use aoc_framework::{AoC, Level, transpose};
+use aoc_framework::{AoC, create_2d_vec, Level, transpose};
 
 #[derive(Clone, Debug)]
 struct Board {
@@ -6,26 +6,15 @@ struct Board {
     marked_fields: Vec<Vec<bool>>,
 }
 
-fn create_2d_vec<T: Clone>(size: usize, default: T) -> Vec<Vec<T>> {
-    (0..size)
-        .fold(Vec::new() as Vec<Vec<T>>, |mut v, _| {
-            v.push(Vec::new());
-            v
-        })
-        .iter()
-        .cloned()
-        .map(|mut vec| {
-            (0..size).for_each(|_| vec.push(default.clone()));
-            vec
-        })
-        .collect::<Vec<Vec<T>>>()
+fn create_vec<T: Clone>(size: usize, default: T) -> Vec<Vec<T>> {
+    create_2d_vec(size, size, default.clone())
 }
 
 impl Default for Board {
     fn default() -> Self {
         Board {
-            board: create_2d_vec(5, 0),
-            marked_fields: create_2d_vec(5, false),
+            board: create_vec(5, 0),
+            marked_fields: create_vec(5, false),
         }
     }
 }
@@ -113,7 +102,7 @@ fn task1(input: PreparedInput) -> Option<String> {
 }
 
 fn task2(input: PreparedInput) -> Option<String> {
-    let (inp, mut boards) = input;
+    let (inp, boards) = input;
 
     boards
         .iter()
