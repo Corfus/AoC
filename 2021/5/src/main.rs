@@ -22,11 +22,7 @@ impl Map {
         let y_diff = line.3 - line.1;
         let diff = (if x_diff.abs() > y_diff.abs() { x_diff } else { y_diff }).abs() + 1;
 
-        println!("{} {} {}", x_diff, y_diff, diff - 1);
-
-
         let mut set_point = |x: isize, y: isize| {
-            println!("x {}  y {}", x, y);
             self.map[(line.1 + y) as usize][(line.0 + x) as usize] += 1;
         };
 

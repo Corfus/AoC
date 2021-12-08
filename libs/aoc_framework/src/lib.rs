@@ -122,16 +122,5 @@ pub fn transpose<T: Clone>(v: &Vec<Vec<T>>) -> Vec<Vec<T>> {
 }
 
 pub fn create_2d_vec<T: Clone>(rows: usize, columns: usize, default: T) -> Vec<Vec<T>> {
-    (0..rows)
-        .fold(Vec::new() as Vec<Vec<T>>, |mut v, _| {
-            v.push(Vec::new());
-            v
-        })
-        .iter()
-        .cloned()
-        .map(|mut vec| {
-            (0..columns).for_each(|_| vec.push(default.clone()));
-            vec
-        })
-        .collect::<Vec<Vec<T>>>()
+    vec![vec![default; columns]; rows]
 }
