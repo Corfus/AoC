@@ -65,13 +65,16 @@ impl AoC {
             .send()
             .ok()
             .and_then(|res| res.text().ok())
+            .map(|mut res| {
+                res.remove(res.len() - 1);
+                res
+            })
             .map(|body| {
                 body
                     .split("\n")
                     .collect::<Vec<&str>>()
                     .iter()
                     .map(|line| line.to_string())
-                    .filter(|line| !line.is_empty())
                     .collect::<Vec<String>>()
             })
     }
