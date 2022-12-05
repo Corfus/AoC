@@ -50,10 +50,6 @@ fn task2(input: Vec<PreparedInput>) -> Option<String> {
 }
 
 fn main() {
-    AoC::new(2022, 4).map(|aoc| {
-        aoc.resolve_task(Level::Two, |input| {
-            prepare_data(input)
-                .and_then(task2)
-        })
-    });
+    AoC::<PreparedInput>::new(2022, 4)
+      .and_then(|aoc| aoc.register_tasks(prepare_data, task1, task2).resolve(Level::Two));
 }

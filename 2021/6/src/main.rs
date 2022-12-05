@@ -90,7 +90,7 @@ fn task2(mut shoals: Vec<PreparedInput>) -> Option<String> {
 }
 
 fn main() {
-    AoC::new(2021, 6).map(|aoc| {
+    AoC::<PreparedInput>::new(2021, 6).map(|aoc| {
         aoc.resolve_task(Level::Two, |input| {
             prepare_data(input)
                 .and_then(task2)

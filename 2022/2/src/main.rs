@@ -172,7 +172,7 @@ fn task2(input: Vec<PreparedInput>) -> Option<String> {
 }
 
 fn main() {
-  AoC::new(2022, 2).map(|aoc| {
+  AoC::<PreparedInput>::new(2022, 2).map(|aoc| {
     aoc.resolve_task(Level::Two, |input| {
       prepare_data(input)
         .and_then(task2)
