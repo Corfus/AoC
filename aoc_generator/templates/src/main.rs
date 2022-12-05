@@ -11,18 +11,14 @@ fn prepare_data(input: Vec<String>) -> Option<Vec<PreparedInput>> {
 }
 
 fn task1(input: Vec<PreparedInput>) -> Option<String> {
-    Some("".to_string())
+    None
 }
 
 fn task2(input: Vec<PreparedInput>) -> Option<String> {
-    Some("".to_string())
+    None
 }
 
 fn main() {
-    AoC::<PreparedInput>::new({{ year }}, {{ day }}).map(|aoc| {
-        aoc.resolve_task(Level::One, |input| {
-            prepare_data(input)
-                .and_then(task1)
-        })
-    });
+    AoC::<PreparedInput>::new({{ year }}, {{ day }})
+      .and_then(|aoc| aoc.register_tasks(prepare_data, task1, task2).resolve(Level::One));
 }
